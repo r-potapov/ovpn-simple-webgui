@@ -1,0 +1,22 @@
+<% title t('.title_html') %>
+<h1><%= t('.title_html') %></h1>
+
+
+<%= link_to t('.new_comment'), new_comment_path %>
+
+<br /><br />
+<% @comments.each do |comment| %>
+  <div style="background-color:#f3f3f3;border: 1px dotted #bbbbbb;;width:50%;margin:auto;margin-bottom:20px;border-radius: 3px;-moz-border-radius: 3px;">
+    <p><%= l comment.created_at, :format => :long %></p>
+    <p><%= comment.content %></p>
+    <% if can? :edit, Comment %>
+      <p><%= link_to t('.edit_comment'), edit_comment_path(comment) %> | 
+    <% end %>
+    <% if can? :destroy, Comment %>
+      <%= link_to t('.destroy_comment'), comment, :confirm => t('.confirm'), :method => :delete %></p>
+    <% else %>
+      </p>
+    <% end %>
+  </div>
+<% end %>
+

@@ -1,0 +1,6 @@
+class IpsController < ApplicationController
+  def create
+    @ip = Ip.new(params[:subnet])
+    @ip.save
+  new
+end

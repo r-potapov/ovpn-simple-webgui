@@ -1,0 +1,31 @@
+<% title t('.title_html') %>
+<h1><%= t('.title_html') %></h1>
+<div class="form">
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b><%= t('.username') %>:</b>
+  <%= @user.username %>
+</p>
+
+<p>
+  <b><%= t('.email') %>:</b>
+  <%= @user.email %>
+</p>
+
+<p>
+  <b><%= t('.created_at') %>:</b>
+  <%= l @user.created_at %>
+</p>
+
+<% if !@user.banned %>
+  <%= link_to t('.block_user'), bann_usr_url(:id => @user.id), :confirm => t('.confirm') %>
+<% else %>
+  <%= link_to t('.unblock_user'), unbann_usr_url(:id => @user.id), :confirm => t('.confirm') %>
+<% end %>
+| <%= link_to t('.destroy_user'), @user, :confirm => t('.confirm'), :method => :delete %>
+<br />
+
+<%= link_to t('.edit_user'), edit_user_path(@user) %> |
+<%= link_to t('.user_list'), users_path %>
+</div>

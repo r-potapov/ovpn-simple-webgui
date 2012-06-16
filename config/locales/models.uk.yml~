@@ -1,0 +1,12 @@
+# Russian localization
+
+uk:
+  users:
+    registrations:
+      new:
+        register: "Реєстрація"
+        sign_up: "Зареєструватися"
+        username: "Ім'я користувача"
+        email: "Aдрес електронної пошти"
+        password: "Пароль"
+        password_confirmation: "Підтвердження пароля"

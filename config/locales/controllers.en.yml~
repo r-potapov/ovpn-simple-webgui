@@ -1,0 +1,16 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+en:
+  cert_was_created: 'Certificate was successfully created.'
+  cert_was_not_created: 'Certificate was not created.'
+  cert_was_updated: 'Certificate was successfully updated.'
+
+  user_was_created: 'User was successfully created.'
+  user_was_updated: 'User was successfully updated.'
+  user_was_banned: 'User was successfully blocked.'
+  user_was_not_banned: 'User was not blocked.'
+  user_was_unbanned: 'User was successfully unblocked.'
+  user_was_not_unbanned: 'User was not unblocked.'
+
+  user_banned: "You are banned from this site. This account has been suspended...."
+  account_suspended: "This account has been suspended for violation of...."

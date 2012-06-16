@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  subnet: 1
+  certificate: 
+
+two:
+  subnet: 1
+  certificate: 

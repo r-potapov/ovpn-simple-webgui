@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <title><%= yield(:title) || "SimpleVPN" %></title>
+  <%= stylesheet_link_tag :all %>
+  <%= javascript_include_tag :defaults %>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+<div class="container">
+  <header class="header clearfix">
+    <div class="logo">
+      <h1><%= link_to 'SimpleVPN.ru', root_url %></h1>
+      <h1>Простое VPN-решение</h1>
+    </div>
+      <nav class="menu_main">
+        <%= form_tag root_path, :class => 'locale' do %>
+          <%= select_tag 'set_locale', options_for_select(LANGUAGES, I18n.locale.to_s), :onchange => 'this.form.submit()' %>
+          <%= submit_tag 'submit' %>
+          <%= javascript_tag "$$('.locale input').each(Element.hide)" %>
+        <% end %>
+        <br />
+        </ul>
+          <% if user_signed_in? %>
+            <li><%= link_to(t('.profile'), edit_user_registration_path) %></li>
+            <li><%= link_to(t('.logout'), destroy_user_session_path, :method => :delete) %></li>
+          <% else %>
+            <li><%= link_to(t('.login'), new_user_session_path)  %></li>
+            <li><%= link_to(t('.registration'), new_user_registration_path)  %></li>
+          <% end %>
+        </ul>
+      </nav>
+    </header>
+    <div class="info">
+      <article class="hero clearfix">
+        <div class="col_100">
+          <ul class="usernav">
+            <caption><%= t('.menu_links') %></caption>  
+            <li><a href="http://swupdate.openvpn.org/community/releases/openvpn-2.2.2-install.exe">Windows Installer</a></li>  
+            <li><a href="http://swupdate.openvpn.org/community/releases/openvpn-2.2.2.zip">Source Zip</a></li>
+            <li><a href="http://www.oberhumer.com/opensource/lzo/">LZO library</a></li>
+            <li><a href="http://openvpn.net/index.php/open-source/documentation/howto.html">HOWTO</a></li>
+          </ul>
+        </div>
+      </article>
+      <nav class="menu_main2">
+	<%= yield :navigation %>
+        <hr style="width: 70%;" />
+      </nav>
+      <article class="article clearfix">
+        <div class="col_17">
+          <%= yield :sidebar %>
+          <br/>
+        </div>
+        <div class="col_66">
+          <%= yield %>
+        </div>
+      </article>
+    </div>    
+    <footer class="footer clearfix">
+      <nav class="menu_bottom" style="float:left;text-align:left;">
+        <%= yield :navigation %>
+      </nav>
+      <nav class="menu_bottom">
+        <ul>
+          <% if user_signed_in? %>
+            <li><%= link_to(t('.profile'), edit_user_registration_path) %></li>
+            <li><%= link_to(t('.logout'), destroy_user_session_path, :method => :delete) %></li>
+          <% else %>
+            <li><%= link_to(t('.login'), new_user_session_path)  %></li>
+            <li><%= link_to(t('.registration'), new_user_registration_path)  %></li>
+          <% end %>
+        </ul>
+      </nav>
+    </footer>
+  </div>
+</body>
+</html>

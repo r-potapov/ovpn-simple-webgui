@@ -1,0 +1,186 @@
+# Russian localization
+
+ru:
+  unauthorized:
+    manage:
+      all: "Вы не уполномочены %{action} %{subject}."
+      user: "Вам не разрешено управлять пользователями."
+      certificate: "Вам не разрешено управлять другими сертификатами."
+    update:
+      certificate: "Вам не разрешено изменять данный сертификат."
+      user: "Вам не разрешено изменять данного пользователя ."
+  activerecord:
+    models:
+      user: "Пользователя"
+  layouts:
+    application:
+      menu_links: "Ссылки"
+      profile: "Профиль"
+      logout: "Выход"
+      certificates: "Cписок сертификатов"
+      comments: "Комментарии"
+      users: "Cписок пользователей"
+      login: "Вход"
+      registration: "Регистрация"
+      about: "О проекте"
+      home: "На главную"
+    home:
+      menu_links: "Ссылки"
+      profile: "Профиль"
+      logout: "Выход"
+      certificates: "Cписок сертификатов"
+      comments: "Комментарии"
+      users: "Cписок пользователей"
+      login: "Вход"
+      registration: "Регистрация"
+      about: "О проекте"
+      home: "На главную"
+
+
+  home:
+    index:
+      title_html: "Главная"
+      certificates: "Cписок сертификатов"
+      comments: "Комментарии"
+      users: "Cписок пользователей"
+      about: "О проекте"
+      cert_count: "Всего выдано сертификатов"
+      user_cert_count: "Вам выдано сертификатов"
+      show_certs: "Список сертификатов"
+      user_count: "Пользователей в системе"
+      show_users: "Список пользователей"
+    about:
+      title_html: "О проекте"
+      certificates: "Cписок сертификатов"
+      comments: "Комментарии"
+      users: "Cписок пользователей"
+      about: "О проекте"
+      home: "На главную"
+
+
+  certificates:
+    index:
+      title_html: "Список сертификатов"
+      title_cert: "Название"
+      cert_files: "Файлы"
+      key_link: "Ключ"
+      crt_link: "Сертификат"
+      config_link: "Файл конфигурации"
+      show: "Детали"
+      ip_cert: "ip-адрес"
+      destroy: "Отзыв"
+      show_cert: "Показать"
+      destroy_cert: "Отозвать"
+      confirm: "Вы уверены?"
+      download_key: "Сохранить ключ"
+      download_crt: "Сохранить сертификат"
+      download_config: "Сохранить файл конфигурации"
+      download_zip: "Сохранить одним файлом"
+      download_portable_zip: "Сохранить portable набор"
+      download_ca_crt: "Сохранить ca сертификат"
+      download_ta_key: "Сохранить ta ключ"
+      cert_limit: "Лимит сертификатов"
+      new_cert: "Получить новый сертификат"
+      max_cert: "Выдано максимум сертификатов"
+      add_html: "Создать сертификат"
+      user_list: "К списку пользователей"
+    show:
+      title_html: "Данные о сертификате"
+      title_cert: "Название"
+      created_at: "Создан"
+      ip_cert: "ip-адрес сертификата"
+      key_link: "Ключ"
+      crt_link: "Сертификат"
+      download_key: "Сохранить ключ"
+      download_crt: "Сохранить сертификат"
+      cert_list: "К списку сертификатов"
+      user_list: "К списку пользователей"
+
+  users:
+    index:
+      title_html: "Список пользователей"
+      admin_list: "Список администраторов"
+      username: "Имя пользователя"
+      email: "Aдрес электронной почты"
+      show: "Детали"
+      cert_list: "Список сертификатов"
+      edit: "Редактирование"
+      block: "Блокирование"
+      destroy: "Удаление"
+      user_cert_list: "Сертификаты пользователя"
+      show_user: "Показать"
+      edit_user: "Редактировать"
+      block_user: "Заблокировать"
+      unblock_user: "Разблокировать"
+      destroy_user: "Удалить"
+      confirm: "Вы уверены?"
+      new_user: "Новый пользователь"
+    show:
+      title_html: "Данные пользователя"
+      username: "Имя пользователя"
+      created_at: "Создан"
+      email: "Aдрес электронной почты"
+      edit_user: "Редактировать"
+      block_user: "Заблокировать"
+      unblock_user: "Разблокировать"
+      destroy_user: "Удалить"
+      confirm: "Вы уверены?"
+      user_list: "К списку пользователей"
+    edit:
+      title_html: "Редактирование данных пользователя"
+      show_user: "Показать"
+      user_list: "К списку пользователей"
+    form:
+      username: "Имя пользователя"
+      email: "Aдрес электронной почты"
+      cert_limit: "Лимит сертификатов"
+      password: "Пароль"
+      password_confirmation: "Подтверждение пароля"
+      roles: "Роли"
+    registrations:
+      new:
+        register: "Регистрация"
+        sign_up: "Зарегистрироваться"
+        username: "Имя пользователя"
+        email: "Aдрес электронной почты"
+        password: "Пароль"
+        password_confirmation: "Подтверждение пароля"
+      edit:
+        profile: "Профиль"
+        username: "Имя пользователя"
+        email: "Aдрес электронной почты"
+        password: "Пароль"
+        password_confirmation: "Подтверждение пароля"
+        current_password: "Текущий пароль"
+        change_password_text: "(оставьте пустым, если вы не хотите изменять его)"
+        current_password_text: "(нам необходим ваш текущий пароль, чтобы подтвердить изменения)"
+        destroy_account: "Удаление аккаунта"
+        destroy_my_account: "удалить мой аккаунт"
+        confirm: "Вы уверены?"
+        back: "Назад"
+    sessions:
+      new:
+        sign_in: "Вход"
+        username: "Имя пользователя"
+        password: "Пароль"
+        remember_me: "Запомнить"
+
+  comments:
+    index:
+      title_html: "Список комментариев"
+      edit_comment: "Редактировать"
+      destroy_comment: "Удалить"
+      confirm: "Вы уверены?"
+      new_comment: "Новый комментарий"
+    new:
+      title_html: "Новый комментарий"
+      content: "Текст"
+      create: "Создать"
+      back: "Назад"
+    edit:
+      title_html: "Редактирование комментария"
+      update: "Обновить"
+      back: "Назад"
+    form:
+      content: "Текст"
+      submit: "Подтвердить"

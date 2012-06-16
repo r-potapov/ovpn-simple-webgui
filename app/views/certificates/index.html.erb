@@ -1,0 +1,90 @@
+<% title t('.title_html') %>
+<h1><%= t('.title_html') %></h1>
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+<% if @certificates.count>0 %>
+  <table class="table">
+    <tr>
+      <th><%= t('.title_cert') %></th>
+      <% if can? :create, Certificate %>
+        <th><%= t('.cert_files') %></th>
+      <% end %>
+      <% if can? :download_zip, Certificate %>
+        <th><%= t('.download_zip') %></th>
+      <% end %>
+      <% if can? :download_portable_zip, Certificate %>
+        <th><%= t('.download_portable_zip') %> (Windows)</th>
+      <% end %>
+      <% if can? :show, Certificate %>
+        <th><%= t('.show') %></th>
+      <% end %>
+      <% if can? :show, Certificate %>
+        <th><%= t('.ip_cert') %></th>
+      <% end %>
+      <% if can? :destroy, Certificate %>
+        <th><%= t('.destroy') %></th>
+      <% end %>
+    </tr>
+  <% @certificates.each do |certificate| %>
+    <tr>
+      <td><%= certificate.title %></td>
+      <% if can? :create, certificate %>
+        <td class="navBar1">
+          <ul>
+	    <li class="headerList1"><%= t('.cert_files') %>
+	      <ul>
+	        <% if can? :download_key, certificate %>
+                  <li><%= link_to t('.download_key'), download_key_url(:id => certificate.id) %></li>
+                <% end %>
+                <% if can? :download_crt, certificate %>
+                  <li><%= link_to t('.download_crt'), download_crt_url(:id => certificate.id) %></li>
+                <% end %>
+                <% if can? :create, certificate %>
+                  <li><%= link_to t('.download_config'), download_config_url(:id => certificate.id) %></li>
+                <% end %>
+	      </ul>
+	    </li>
+          </ul>
+        </td>
+      <% end %>
+      <% if can? :download_zip, certificate %>
+        <td><%= link_to t('.download_zip'), download_zip_url(:id => certificate.id) %></td>
+      <% end %>
+      <% if can? :download_portable_zip, certificate %>
+        <td><%= link_to t('.download_portable_zip'), download_portable_zip_url(:id => certificate.id) %></td>
+      <% end %>
+      <% if can? :show, certificate %>
+        <td><%= link_to t('.show_cert'), certificate %></td>
+      <% end %>
+      <% if can? :show, certificate %>
+        <td><%= Ip.select("inet_ntoa(subnet*4+1+inet_aton('172.16.0.0')) as str1").where('certificate_id=?', certificate.id)[0].str1 %></td>
+      <% end %>
+      <% if can? :destroy, certificate %>
+        <td><%= link_to t('.destroy_cert'), certificate, :confirm => t('.confirm'), :method => :delete %></td>
+      <% end %>
+    </tr>
+  <% end %>
+  </table>
+  <% if can? :create, Certificate %>
+    <p><%= t('.download_ca_crt') %>: <%= link_to 'ca.crt', download_ca_url %></p>
+    <p><%= t('.download_ta_key') %>: <%= link_to 'ta.key', download_ta_url %></p>
+  <% end %>
+<% end %>
+<div>
+  <% if can? :create, Certificate %>
+    <p><%= t('.cert_limit') %>: <%= current_user.cert_limit %></p>
+    <table>
+      <tr>
+        <% if current_user.certificates.count<current_user.cert_limit %>
+          <td class="notice"><%= t('.new_cert') %></td>
+          <td><%= button_to t('.add_html'), certificates_path %></td>
+        <% else %>
+          <td class="alert"><%= t('.max_cert') %></td>
+        <% end %>
+      </tr>
+    </table>
+  <% end %>
+  <% if can? :show, User %>
+    <%= link_to(t('.user_list'), users_url) %>
+  <% end %>
+</div>

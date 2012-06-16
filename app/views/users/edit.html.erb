@@ -1,0 +1,8 @@
+<% title t('.title_html') %>
+<h1><%= t('.title_html') %></h1>
+<div class="form">
+  <%= render 'form' %>
+
+  <%= link_to t('.show_user'), @user %> |
+  <%= link_to t('.user_list'), users_path %>
+</div>

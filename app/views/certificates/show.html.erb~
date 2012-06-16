@@ -1,0 +1,39 @@
+<% title t('.title_html') %>
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+
+<p>
+  <b><%= t('.title_cert') %>:</b>
+  <%= @certificate.title %>
+</p>
+
+<p>
+  <b><%= t('.created_at') %>:</b>
+  <%= l @certificate.created_at  %>
+</p>
+
+<% if can? :show, @certificate %>
+<p>
+  <b><%= t('.ip_cert') %>:</b>
+  <%= @ip %>
+</p>
+<% end %>
+
+<% if can? :download_key, @certificate %>
+  <p>
+    <b><%= t('.key_link') %>:</b>
+    <%= link_to t('.download_key'), download_key_url(:id => @certificate.id) %>
+  </p>
+<% end %>
+<% if can? :download_crt, @certificate %>
+  <p>
+    <b><%= t('.crt_link') %>:</b>
+    <%= link_to t('.download_crt'), download_crt_url(:id => @certificate.id) %>
+  </p>
+<% end %>
+
+
+<%= link_to t('.cert_list'), certificates_path %>|
+<% if can? :show, User %>
+  <%= link_to(t('.user_list'), users_url) %>
+<% end %>
