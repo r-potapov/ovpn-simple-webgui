@@ -1,0 +1,232 @@
+1 Установка компонентов
+Для работы системы требуется Ruby on Rails версии 3.0
+Ниже приведено описание установки компонентов для ОС CentOS.
+
+1.1 Установка MySQL
+Проверяем установленные пакеты MySQL:
+# rpm -qa | grep mysql
+Устанавливаем пакеты mysql:
+# yum install mysql-server mysql-devel
+# gem install mysql2 --version 0.2.9
+Запустим MySQL:
+# service mysqld start
+Добавим его в автозагрузку:
+# chkconfig --levels 235 mysqld on
+Установим новый пароль пользователю root, для этого запустим скрипт /usr/bin/mysql_secure_installation, удалим анонимного (anonymous, everybody) пользователя и тестовую базу данных.
+Создадим базу данных:
+# mysql -u root -p
+mysql> CREATE DATABASE new_app_production;
+mysql> GRANT ALL PRIVILEGES ON new_app_production.*
+-> TO 'user'@'localhost' IDENTIFIED BY 'password';
+mysql> EXIT;
+Копируем файлы приложения на сервер в директорию /var/www/new_app. Переходим в папку приложения:
+# cd /var/www/new_app
+Для установки дополнительных пакетов выполняем команду bundle install в папке приложения:
+# bundle install
+Создадим схему данных, для этого применим миграцию:
+# rake db:setup RAILS_ENV="production"
+Добавим в таблицу roles записи для администратора (admin) и пользователя (customer):
+# mysql -u user -p
+mysql> USE new_app_production;
+mysql> INSERT INTO roles (id, name, created_at, updated_at) VALUES(1, "admin", NOW(), NOW());
+mysql> INSERT INTO roles (id, name, created_at, updated_at) VALUES(2, "customer", NOW(), NOW());
+
+1.2 Установка Apache
+Устанавливаем пакеты Apache:
+# yum install httpd
+Проверяем установленные пакеты Apache:
+# rpm -qa | grep -i httpd
+Запустим Apache HTTP server (httpd):
+# service httpd start
+Добавим его в автозагрузку:
+# chkconfig --levels 235 httpd on
+Теперь можно переходить к установке Passenger, для этого воспользуемся установкой через gems:
+# gem install passenger
+# passenger-install-apache2-module
+Если необходимые зависимости не будут найдены, то последняя команда укажет, что необходимо сделать. Например, на Ubuntu 10.04 (Lucid Lynx) Linux необходимо дополнительно установить build-essential, apache2-prefork-dev, libapr1-dev и libaprutil1-dev. Если это произойдет, следуйте указанным инструкциям, затем попробуйте установить passenger снова.
+На CentOS 6.2 для установки passenger требуется дополнительно установить httpd-devel (Apache 2 development headers), apr-devel (Apache Portable Runtime (APR) development headers) и apr-util-devel (Apache Portable Runtime Utility (APU) development headers):
+# yum install apr-devel
+# yum install apr-util-devel
+# yum install httpd-devel
+После установки passenger необходимо отредактировать конфигурационный файл Apache и добавить в него следующие строки:
+LoadModule passenger_module /usr/local/lib/ruby/gems/1.9.1/gems/passenger-3.0.11/ext/apache2/mod_passenger.so
+PassengerRoot /usr/local/lib/ruby/gems/1.9.1/gems/passenger-3.0.11
+PassengerRuby /usr/local/bin/ruby
+После перезапуска Apache Вы можете развертывать любое количество приложений Ruby on Rails на Apache без какого-либо особого конфигурирования Ruby on Rails. Чтобы найти расположение конфигурационного файла Apache попробуйте выполнить:
+# apachectl -V | grep SERVER_CONFIG_FILE
+Для его редактирования можно воспользоваться редактором nano:
+# nano /etc/httpd/conf/httpd.conf
+
+1.3 Развертывание приложения Ruby on Rails
+Создадим файл виртуального хоста:
+# touch /etc/httpd/conf.d/vhost.conf
+Для его редактирования можно воспользоваться редактором nano:
+# nano /etc/httpd/conf.d/vhost.conf
+Если приложение расположено в директории /var/www/new_app, то при добавлении виртуального хоста (virtual host) в конфигурационном файле Apache устанавливаем значение параметра DocumentRoot равным /var/www/new_app/public:
+<VirtualHost *:80>
+ServerName www.yourhost.com
+DocumentRoot /var/www/new_app/public
+<Directory /var/www/new_app/public>
+AllowOverride all
+Options -MultiViews
+</Directory>
+</VirtualHost>
+
+2 Установка системы OpenVPN
+Сначала необходимо установить библиотеку  lzo для сжатия трафика (Data compression library with very fast (de)compression.).
+Создадим директорию для загрузки исходных кодов:
+# mkdir /usr/src/lzo
+Переходим в созданную директорию:
+# cd /usr/src/lzo
+Загружаем lzo версии 2.06
+# wget http://www.oberhumer.com/opensource/lzo/download/lzo-2.06.tar.gz
+Распаковываем архив:
+# tar -zxvf lzo-2.06.tar.gz
+Переходим  в директорию с распакованными файлами lzo:
+# cd lzo-2.06
+Выполняем установку:
+# ./configure
+# make
+# make install
+Создадим директорию для загрузки исходных кодов:
+# mkdir /usr/src/openvpn
+Переходим в созданную директорию:
+# cd /usr/src/openvpn
+Загружаем openvpn версии 2.2.2
+# wget http://swupdate.openvpn.org/community/releases/openvpn-2.2.2.tar.gz
+Распаковываем архив OpenVPN, переходим  в директорию с распакованными файлами и устанавливаем:
+# tar -zxvf openvpn-2.2.2.tar.gz
+# cd openvpn-2.2.2
+# ./configure
+# make
+# make install
+Проверяем установку:
+# openvpn --version
+Копируем набор скриптов (поставляется вместе с дистрибутивом) в директорию /etc/openvpn/easy-rsa:
+# mkdir /etc/openvpn
+# cp -R /usr/src/openvpn/openvpn-2.2.2/easy-rsa/2.0 /etc/openvpn/easy-rsa
+Изменяем параметры скриптов для управления сертификатами:
+# cd /etc/openvpn/easy-rsa
+# chmod +x clean-all
+# chmod +x build*
+Создаем директорию, в которой будут располагаться сгенерированные сертификаты: 
+# mkdir /etc/openvpn/easy-rsa
+# mkdir /etc/openvpn/easy-rsa/keys
+Создаем файлы index.txt (в который записываются сведения о выданных сертификатах) и serial (который хранит номер выдаваемого сертификата):
+# touch /etc/openvpn/easy-rsa/keys/index.txt
+# touch /etc/openvpn/easy-rsa/keys/serial
+Определяем переменные окружения в файле переменных vars.
+# nano /etc/openvpn/easy-rsa/vars
+Создаем необходимые ключи. Загружаем переменные в оболочку:
+# cd /etc/openvpn/easy-rsa
+# . ./vars
+Удаляем (если необходимо) все предыдущие файлы ключей и сертификатов из директории /etc/openvpn/easy-rsa/keys (эта директория указана в переменной KEY_DIR файла vars): 
+# ./clean-all
+Создаем сертификат подлинности (Certificate Authority) сервера:
+# ./build-ca
+Создаем сертификат X.509 для сервера:
+# ./build-key-server vpnserver
+Создаем файл параметров Диффи-Хелмана, предназначенного для обеспечения более надежной защиты данных при установке соединения клиента с сервером:
+# ./build-dh
+Генерируем общий для клиента и сервера TLS-ключ, служащий дополнительной защитой. TLS предоставляет возможности аутентификации и безопасной передачи данных через Интернет с использованием криптографических средств. Часто происходит лишь аутентификация сервера, в то время как клиент остается неаутентифицированным. Для взаимной аутентификации каждая из сторон должна поддерживать инфраструктуру открытого ключа (PKI), которая позволяет защитить клиент-серверные приложения от перехвата сообщений, редактирования существующих сообщений и создания поддельных:
+# cd /etc/openvpn/easy-rsa/keys
+# openvpn --genkey --secret ta.key
+В результате в папке /etc/openvpn/easy-rsa/keys мы имеем следующие файлы:
+ca.crt – главный сертификат подлинности (Certificate Authority), этот файл нужен и клиенту и серверу;
+dh1024.pem – ключ Диффи Хельмана, этот файл нужен только серверу;
+vpnserver.crt – сертификат X.509 сервера, нужен только серверу;
+vpnserver.key – ключ сервера, нужен только серверу (секретный файл);
+ta.key – TLS-ключ, нужен и клиенту и серверу.
+Теперь в папку /etc/openvpn/keys на сервере OpenVPN скопируем файлы ca.crt, dh1024.pem, vpnserver.crt, vpnserver.key и ta.key:
+# mkdir /etc/openvpn/keys
+# cp /etc/openvpn/easy-rsa/keys/ca.crt dh1024.pem vpnserver.crt vpnserver.key ta.key /etc/openvpn/keys
+Конфигурирование сервера OpenVPN
+Создим папку ccd и папку log:
+# mkdir /etc/openvpn/ccd
+# mkdir /etc/openvpn/log
+В папке log создадим два файла openvpn.log и openvpn-status.log:
+# touch /etc/openvpn/log/openvpn.log
+# touch/etc/openvpn/log/openvpn-status.log
+Расположение файла конфигурации сервера: /etc/openvpn/server.conf
+# nano /etc/openvpn/server.conf
+Содержимое файла конфигурации сервера OpenVPN:
+port 1194
+proto tcp
+dev tun
+; tls-server
+server 10.8.0.0 255.255.255.0
+keepalive 10 120
+persist-key
+persist-tun
+client-config-dir /etc/openvpn/ccd
+push "route 192.168.0.0 255.255.0.0"
+ca /etc/openvpn/keys/ca.crt
+cert /etc/openvpn/keys/vpnserver.crt
+key /etc/openvpn/keys/vpnserver.key
+dh /etc/openvpn/keys/dh1024.pem
+tls-auth /etc/openvpn/keys/ta.key 0
+crl-verify /etc/openvpn/easy-rsa/keys/crl.pem
+comp-lzo
+status /etc/openvpn/log/openvpn-status.log
+log /etc/openvpn/log/openvpn.log
+log-append /etc/openvpn/log/openvpn.log
+verb 3
+Содержимое файла для запуска сервера OpenVPN в Linux/FreeBSD:
+#!/bin/sh
+dir=/etc/openvpn
+modprobe tun
+echo 1 > /proc/sys/net/ipv4/ip_forward
+openvpn --cd $dir --daemon --config /etc/openvpn/server.conf
+Сертификаты для удаленного клиента создаются командой:
+# . ./vars
+# ./build-key client_name
+Для использования в системе файл скрипта  build-key должен быть приведен к следующему виду:
+#!/bin/sh
+# Make a certificate/private key pair using a locally generated
+# root certificate.
+. ./vars
+export EASY_RSA="${EASY_RSA:-.}"
+"$EASY_RSA/pkitool" $*
+Отзыв недействительных сертификатов
+# . ./vars
+# ./revoke-full client_name  
+Для использования в системе файл скрипта revoke-full должен быть приведен к следующему виду:
+#!/bin/sh
+# revoke a certificate, regenerate CRL,
+# and verify revocation
+. ./vars
+CRL="crl.pem"
+RT="revoke-test.pem"
+
+if [ $# -ne 1 ]; then
+    echo "usage: revoke-full <cert-name-base>";
+    exit 1
+fi
+
+if [ "$KEY_DIR" ]; then
+    cd "$KEY_DIR"
+    rm -f "$RT"
+
+    # set defaults
+    export KEY_CN=""
+    export KEY_OU=""
+    export KEY_NAME=""
+
+    # revoke key and generate a new CRL
+    $OPENSSL ca -revoke "$1.crt" -config "$KEY_CONFIG"
+
+    # generate a new CRL -- try to be compatible with
+    # intermediate PKIs
+    $OPENSSL ca -gencrl -out "$CRL" -config "$KEY_CONFIG"
+    if [ -e export-ca.crt ]; then
+	cat export-ca.crt "$CRL" >"$RT"
+    else
+	cat ca.crt "$CRL" >"$RT"
+    fi
+    
+    # verify the revocation
+    $OPENSSL verify -CAfile "$RT" -crl_check "$1.crt"
+else
+    echo 'Please source the vars script first (i.e. "source ./vars")'
+    echo 'Make sure you have edited it to reflect your configuration.'
+fi
