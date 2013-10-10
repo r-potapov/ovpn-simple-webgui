@@ -1,3 +1,0 @@
-class IpsController < ApplicationController
-  
-end
